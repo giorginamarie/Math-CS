@@ -1,0 +1,16 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# LaTeX
+*.aux
+*.log
+*.toc
+*.out
+*.synctex.gz
+
+# Python / Node (if you ever use them)
+__pycache__/
+*.pyc
+node_modules/
+dist/
