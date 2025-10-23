@@ -6,9 +6,10 @@ This repository serves as a central workspace for academic and independent work 
 
 ## 📁 Structure
 
-- **docs** — Study guides, LaTeX documents, and reference material  
+- **docs** — Study guides and reference material  
+- **LaTeX** — LaTeX documents  
 - **logs** — ChatGPT project logs (condensed context + decisions)  
-- **LICENSE** — MIT License  
+- **LICENSE** — [MIT License](LICENSE)   
 - **README.md** — Repo overview and usage notes  
 
 ## 🧩 Project Logs
@@ -21,12 +22,7 @@ These entries both document my workflow and provide the corresponding ChatGPT pr
 - **Mathematics:** Probability, statistics, linear algebra, and applied problem solving  
 - **Computer Science:** Software development, data structures, algorithms, and systems  
 - **Data Projects:** Exploratory data analysis, visualization, and modeling  
-- **AI & LLMs:** Prompt design, workflow integration, and applied generative AI
-
-## 🪪 License
-
-This repository is licensed under the [MIT License](LICENSE).  
-You are free to use, modify, and distribute this work with attribution.
+- **AI & LLMs:** Prompt design, workflow integration, and applied generative AI  
 
 ## ✨ Author
 
