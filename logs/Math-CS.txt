@@ -1,0 +1,15 @@
+# 📘 Project Log — Math-CS Repo
+
+ 
+**Last Updated:** 2025-10-22
+
+---
+
+## 🧩 Entries  
+
+### [2025-10-22] Initialized GitHub Repository and Local Folder Structure
+Context: Began setup of the Math-CS repository to manage mathematics, computer science, and ChatGPT project materials within a unified workflow.
+Action: Created directory hierarchy in Google Drive (ChatGPT/Math-CS), initialized Git with main branch, added .gitignore, README.md, and initial PROJECT_LOG-Math-CS.md. Configured Sublime Text as default Git editor and reviewed Git branch conventions.
+Result: Local Git repository fully initialized and structured for academic and AI-assisted work, ready for connection to GitHub.
+
+
