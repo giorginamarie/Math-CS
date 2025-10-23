@@ -1,0 +1,25 @@
+# 📘 Project Log — LaTeX
+
+  
+**Tools:** Overleaf + GitHub  
+**Last Updated:** 2025-10-22
+
+---
+
+## ⚙️ Git & Sync Notes
+- Overleaf remote: `https://git@git.overleaf.com/[projectID]`
+- Branch mapping: `main` ↔ `master`
+- Overleaf as **read-only** (only push to GitHub)
+- Pull from Overleaf (`git pull overleaf master`) to get browser edits
+
+---
+
+## 🧩 Entries  
+
+### [2025-10-22] Connected Overleaf Project to GitHub Repository
+Context: Set up sync between Overleaf project *Math-CS* and GitHub repo *Math-CS* to manage LaTeX notes (MTH-3250, CSE-2050, Algebra) within a unified workflow.  
+Action: Added Overleaf as a remote to the existing local GitHub repo, merged Overleaf’s `master` branch into local `main`, and established dual-remote commands for ongoing sync. Developed workflow for push/pull.  
+Result: Overleaf, local, and GitHub repositories are now aligned. Workflow supports future updates with `git pull overleaf master`. 
+
+
+
