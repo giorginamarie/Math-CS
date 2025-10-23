@@ -1,0 +1,206 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[backend=bibtex, style=numeric]{biblatex}
+\addbibresource{references.bib}
+\title{Algebra Cheat Sheet}
+\author{Giorgina}
+\date{\today}
+\begin{document}
+\maketitle
+
+This cheat sheet is based on material from Coursera's Algebra I course \cite{coursera-algebra-i}.
+
+
+\section*{Sets of Numbers}
+
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Name} & \textbf{Symbol} & \textbf{Description} \\
+\hline
+Natural Numbers & $\mathbb{N}$ & Counting numbers: $\{1, 2, 3, \dots\}$ \\
+Whole Numbers & $\mathbb{W}$ & Natural numbers plus zero: $\{0, 1, 2, 3, \dots\}$ \\
+Integers & $\mathbb{Z}$ & All whole numbers and negatives: $\{\dots, -3, -2, -1, 0, 1, 2, 3, \dots\}$ \\
+Rational Numbers & $\mathbb{Q}$ & Can be written as a ratio of integers \\
+Irrational Numbers & --- & Cannot be written as a ratio of integers (e.g., $\pi$, $\sqrt{2}$) \\
+Real Numbers & $\mathbb{R}$ & All rational and irrational numbers \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+\textbf{Note:} Sometimes $\mathbb{N}$ includes zero, but for this course it does not.
+
+\section*{Closure Properties of Real Numbers}
+
+\textbf{Addition and Multiplication:} If $a, b \in \mathbb{R}$, then $(a + b) \in \mathbb{R}$ and $(a \cdot b) \in \mathbb{R}$.
+
+\textbf{Subtraction:} If $a, b \in \mathbb{R}$, then:
+\[
+a - b = a + (-b) \in \mathbb{R}.
+\]
+
+\textbf{Division:} If $a, b \in \mathbb{R}$ and $b \neq 0$, then:
+\[
+a \div b = a \cdot \frac{1}{b} \in \mathbb{R}.
+\]
+
+\section*{Properties of Addition and Multiplication}
+
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Property} & \textbf{Equation} & \textbf{Description} \\
+\hline
+Commutative (Add) & $a + b = b + a$ & Order doesn't change sum \\
+Commutative (Mult) & $a \cdot b = b \cdot a$ & Order doesn't change product \\
+Associative (Add) & $(a + b) + c = a + (b + c)$ & Grouping doesn't change sum \\
+Associative (Mult) & $(a \cdot b) \cdot c = a \cdot (b \cdot c)$ & Grouping doesn't change product \\
+Distributive & $a \cdot (b + c) = a \cdot b + a \cdot c$ & Distribution over addition \\
+\hline
+\end{tabular}
+
+\section*{Order of Operations}
+
+The order of operations is:
+\begin{enumerate}[label=\arabic*.]
+    \item \textbf{Parentheses/Brackets}
+    \item \textbf{Exponents/Orders}
+    \item \textbf{Multiplication and Division (left to right)}
+    \item \textbf{Addition and Subtraction (left to right)}
+\end{enumerate}
+Common acronyms: PEMDAS, BODMAS, BEDMAS
+
+\section*{Fractions}
+
+\textbf{For $\frac{a}{b}$:}
+\begin{itemize}
+    \item Numerator: $a$
+    \item Denominator: $b$
+    \item Reciprocal: $\frac{b}{a}$
+\end{itemize}
+
+\subsection*{Multiplication}
+\[
+\frac{a}{b} \cdot \frac{c}{d} = \frac{a \cdot c}{b \cdot d}
+\]
+
+\subsection*{Division}
+\[
+\frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \cdot \frac{d}{c} = \frac{a \cdot d}{b \cdot c}
+\]
+
+\subsection*{Addition and Subtraction}
+\[
+\frac{a}{b} + \frac{c}{d} = \frac{ad + cb}{bd}
+\]
+\[
+\frac{a}{b} - \frac{c}{d} = \frac{ad - cb}{bd}
+\]
+
+\subsection*{Fractions and Whole Numbers}
+\[
+a = \frac{a}{1}
+\]
+
+\section*{Equations and Properties of Equality}
+
+\subsection*{Definitions}
+
+\begin{itemize}
+    \item \textbf{Equation:} expression with equals sign.
+    \item \textbf{Coefficient:} multiplier of a variable.
+    \item \textbf{Solution:} value(s) that make equation true.
+    \item \textbf{Degree:} highest power of variable.
+    \item \textbf{Linear equation:} equation with degree 1.
+\end{itemize}
+
+\subsection*{Properties of Equality}
+
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Property} & \textbf{Rule} & \textbf{Explanation} \\
+\hline
+Symmetric & If $a = b$, then $b = a$ & Order of equality doesn't matter \\
+Transitive & If $a = b$ and $b = c$, then $a = c$ & Equal values substitute \\
+Addition & If $a = b$, then $a + c = b + c$ & Adding same value preserves equality \\
+Subtraction & If $a = b$, then $a - c = b - c$ & Subtracting same value preserves equality \\
+Multiplication & If $a = b$, then $a \cdot c = b \cdot c$ & Multiplying preserves equality \\
+Division & If $a = b$, then $a \div c = b \div c$ ($c \neq 0$) & Division preserves equality \\
+\hline
+\end{tabular}
+
+\subsection*{Solving Linear Equations}
+
+\begin{enumerate}[label=\arabic*.]
+    \item Simplify both sides using order of operations.
+    \item Move constants to one side.
+    \item Move variables to the other side.
+    \item Divide by the coefficient of the variable.
+\end{enumerate}
+
+\section*{Properties of Absolute Value}
+
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Property} & \textbf{Rule} & \textbf{Explanation} \\
+\hline
+Idempotence & $\left| \left| x \right| \right| = \left| x \right|$ & Absolute value taken multiple times doesn’t change value. \\
+Symmetry & $\left| -x \right| = \left| x \right|$ & Opposite sign has same absolute value. \\
+Multiplicative & $\left| x \cdot y \right| = \left| x \right| \cdot \left| y \right|$ & Absolute value distributes over multiplication. \\
+Preserves Division & $\left| \frac{x}{y} \right| = \frac{\left| x \right|}{\left| y \right|}$ & Absolute value distributes over division. \\
+\hline
+\end{tabular}
+
+\section*{Triangle Inequality}
+
+\textbf{Be careful:} In general:
+\[
+\left| x + y \right| \neq \left| x \right| + \left| y \right|.
+\]
+
+\textbf{Example:}
+
+Let $x = 2$, $y = -1$:
+
+\[
+\left| x + y \right| = \left| 2 + (-1) \right| = \left| 1 \right| = 1
+\]
+
+\[
+\left| x \right| + \left| y \right| = \left| 2 \right| + \left| -1 \right| = 2 + 1 = 3
+\]
+
+\textbf{Triangle Inequality:}
+\[
+\left| x + y \right| \leq \left| x \right| + \left| y \right|
+\]
+
+\section*{Solving Absolute Value Equations}
+
+If solving $\left| x \right|$, remember that:
+\[
+\left| x \right| = 
+\begin{cases}
+x & \text{if } x \geq 0 \\
+-x & \text{if } x < 0
+\end{cases}
+\]
+
+\textbf{Solving process:}
+\begin{enumerate}[label=\arabic*.]
+    \item Write two equations: one with $x$, one with $-x$.
+    \item Solve both equations.
+    \item Verify solutions satisfy the original equation.
+    \item Usually, expect two solutions.
+\end{enumerate}
+
+\printbibliography
+
+\end{document}

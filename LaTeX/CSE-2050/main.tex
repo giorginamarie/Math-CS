@@ -1,0 +1,842 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{multicol}
+\usepackage{bm}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{CS 2050 Computer Science 2}
+\lhead{Summer 2025}
+\rfoot{\thepage}
+\titleformat{\section}{\large\bfseries}{}{0em}{}
+\begin{document}
+\begin{center}
+\LARGE{\textbf{CS 2050 Notes}} \\
+\vspace{0.5em}
+\large{Key Concepts: ADTs, Lists, Arrays, Stacks, Queues, Search, and Sort}
+\end{center}
+\vspace{1em}
+
+\section*{Vocabulary}
+\begin{itemize}
+  \item \textbf{Subscript}  
+    The integer index used in brackets to access an array element (e.g.\ \verb|a[3]|).
+  \item \textbf{Size Declarator}  
+    The number or variable in the array creation expression (e.g.\ \verb|new int[10]|).
+  \item \textbf{Initialization List}  
+    A comma-separated set of values in braces used to initialize arrays (e.g.\ \verb|int[] d = {31,28,31};|).
+\end{itemize}
+
+\section*{Java Basics}
+\begin{itemize}
+  \item When using abstraction as a design principle you should focus on what you want to do with the data
+  \item \verb|int[] a;| and \verb|int a[];| are both legal and equivalent array declarations.
+  \item Array bounds checking is performed at \emph{runtime}; accessing \verb|a[i]| for \(i<0\) or \(i\ge a.length\) throws \texttt{ArrayIndexOutOfBoundsException}.
+  \item Passing an array to a method passes the reference, so the method can modify the original array.
+  \item Constructors are \emph{not} inherited; subclasses must either call a superclass constructor via \verb|super(...)| or rely on its no-arg version.
+  \item A superclass reference can point to any subclass object (polymorphism), but only superclass methods/fields are directly accessible.
+  \item Access modifiers:  
+    \begin{itemize}
+      \item \texttt{public} – everywhere  
+      \item \texttt{protected} – package + subclasses  
+      \item (default) – package only  
+      \item \texttt{private} – class only  
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Inheritance Essentials}
+\textbf{Inheritance} is the mechanism by which one class (i.e., subclass) acquires fields and methods from another (i.e., superclass).
+\begin{itemize}
+  \item \textbf{Superclass}: the general/base class in an inheritance chain.
+  \item \textbf{Subclass}: the derived class that \texttt{extends} the superclass.
+  \item \textbf{extends} keyword the indicates inheritance.
+  \item \textbf{private} members in the superclass are \emph{not} accessible to subclasses.
+\end{itemize}
+
+\subsection*{Error Types}
+\begin{itemize}
+  \item \textbf{Syntax/Compile-time error:} caught before running (e.g., missing semicolon).
+  \item \textbf{Runtime error:} occurs during execution (e.g., \texttt{ArrayIndexOutOfBoundsException}).
+  \item \textbf{Logic error:} runs but produces incorrect results (e.g., wrong loop bounds).
+  \item \textbf{Array bounds checking:} always at \emph{run-time}.
+\end{itemize}
+
+\section*{Security Best Practices}
+\begin{itemize}
+  \item \textbf{Input Validation} – Always check method arguments and user input for correctness and bounds before processing.
+  \item \textbf{Least Assumptions} – Don’t trust external clients; sanitize strings, numbers, file paths, etc., even if you “know” how they’ll call you.
+  \item \textbf{Fail-Fast on Invalid States} – Throw exceptions (e.g.\ \texttt{IllegalArgumentException}) when preconditions aren’t met.
+  \item \textbf{Avoid \texttt{@SuppressWarnings("unchecked")}} unless you have a very good reason; it can mask real type‐safety issues.
+  \item \textbf{Minimal Public API} – Expose only the methods you intend clients to use; hide all implementation-specific helpers as \texttt{private}.
+\end{itemize}
+
+\section*{Loop Structures in Java}
+\begin{itemize}[leftmargin=*]
+\item \textbf{For Loop:}
+  \begin{itemize}
+    \item Used when the number of iterations is known.
+    \item Syntax: \texttt{for (init; condition; update) \{ statements \}}
+    \item Example: \texttt{for (int i = 0; i < n; i++) \{ ... \}}
+  \end{itemize}
+
+\item \textbf{While Loop:}
+  \begin{itemize}
+    \item Used when condition is checked before each iteration.
+    \item Good when the number of iterations is unknown.
+    \item Syntax: \texttt{while (condition) \{ statements \}}
+  \end{itemize}
+
+\item \textbf{Do-While Loop:}
+  \begin{itemize}
+    \item Executes the body \textit{at least once}.
+    \item Condition is checked after each iteration.
+    \item Syntax: \texttt{do \{ statements \} while (condition);}
+  \end{itemize}
+\end{itemize}
+
+\subsection*{Loop Examples}
+\begin{verbatim}
+// For loop
+for (int i = 0; i < 5; i++) {
+    System.out.println(i);
+}
+
+// While loop
+int i = 0;
+while (i < 5) {
+    System.out.println(i);
+    i++;
+}
+
+// Do-while loop
+int j = 0;
+do {
+    System.out.println(j);
+    j++;
+} while (j < 5);
+\end{verbatim}
+
+\newpage
+\section*{Abstract Data Types (ADTs)}
+\begin{itemize}[leftmargin=*]
+\item ADT = Abstract Data Type. It defines \textbf{what} operations are supported, not \textbf{how} they're implemented.
+\item Examples: List (ordered), Bag (unordered), Stack (LIFO), Queue (FIFO).
+\item In Java, ADTs are defined via \texttt{interface}; implementations are in \texttt{class}.
+\item Encapsulation hides implementation details (like how items are stored).
+\item When a \texttt{class} implements an \texttt{interface}, it must provide all of the non-default methods with the exact signatures.
+
+\end{itemize}
+
+\subsection*{ADT Design Considerations}
+\begin{itemize}
+  \item Specify preconditions and postconditions for methods.
+  \item Clearly document interface behavior (e.g., what happens when popping an empty stack?).
+  \item Favor exceptions over ambiguous return values for error signaling.
+\end{itemize}
+
+
+\subsection*{List ADT and AList Implementation}
+\begin{itemize}[leftmargin=*]
+\item 1-based indexing: the first item is at position 1 \textit{unless otherwise specified}
+\item \texttt{add(T newEntry)} — adds to end. \\
+\texttt{add(int position, T newEntry)} — inserts at specific position (shifts others right).
+\item \texttt{remove(int pos)} — removes item at pos (shifts others left).
+\item \texttt{replace(pos, val)}, \texttt{getEntry(pos)}, \texttt{contains(val)}, \texttt{getLength()}, \texttt{isEmpty()}
+\item Implemented with arrays in AList. Resizes when needed.
+\item Private methods like \texttt{makeRoom()} and \texttt{removeGap()} handle index shifts.
+\end{itemize}
+
+\hrulefill
+
+\section*{Algorithm Efficiency and Growth Rates}
+\begin{itemize}
+  \item \textbf{Basic Operation:} Most frequent or costly operation (e.g., comparison in search).
+  \item \textbf{Case Analysis:}
+  \begin{itemize}
+    \item Best Case: Minimum time for input.
+    \item Worst Case: Maximum time for input.
+    \item Average Case: Expected time for random input.
+  \end{itemize}
+  \item \textbf{Big-O Identities:}
+    \begin{itemize}
+      \item $O(k \cdot g(n)) = O(g(n))$ for any constant $k$.
+      \item $O(g_1(n)) + O(g_2(n)) = O(\max(g_1(n), g_2(n)))$.
+    \end{itemize}
+\end{itemize}
+
+
+\subsection*{Algorithm Efficiency \& Big-O}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Time Complexity:} Growth of basic operation count as input size $n$ increases.
+\item \textbf{Space Complexity:} Memory usage required during execution.
+\item \textbf{Basic Operation:} The most repeated or costly operation (e.g., comparison, assignment).
+\item \textbf{Big-O Notation:} Describes the upper bound of how an algorithm's runtime or memory usage grows with input size $n$.
+\item \textbf{O(1):} Constant time — runtime doesn't grow with $n$ (e.g., array index access).
+\item \textbf{O(log n):} Logarithmic — input size is halved each step (e.g., binary search). Time grows slowly, even for large $n$.
+\item \textbf{O(n):} Linear — time grows proportionally with input size.
+\item $\bm{O(n\log n):}$ Grows faster than linear, typical of merge sort.
+\item $\bm{O(n^2):}$ Quadratic — often caused by nested loops.
+\item $\bm{O(2^n), O(n!):}$ Exponential and factorial — grows extremely fast, inefficient for large inputs.
+\end{itemize}
+
+
+\subsection*{Growth Rate Examples}
+\begin{itemize}[leftmargin=*]
+\item \texttt{Algorithm A:} sum from 1 to $n$ using a loop – $O(n)$
+\item \texttt{Algorithm B:} nested loop – $O(n^2)$
+\item \texttt{Algorithm C:} use formula $n(n+1)/2$ – $O(1)$
+\item Doubling input $n$: \\
+$O(n)$ → 2× time \\
+$O(n^2)$ → 4× time \\
+$O(n^3)$ → 8× time \\
+$O(\log n)$ → negligible increase
+\end{itemize}
+
+\hrulefill
+
+\section*{Arrays in Java}
+\begin{itemize}[leftmargin=*]
+\item Fixed size, indexed starting at 0.
+\item Created using \texttt{new} keyword. Ex: \texttt{int[] nums = new int[10];}
+\item Length is accessed via \texttt{array.length}.
+\item ArrayList is resizable and part of Java Collections.
+\item Use loops or \texttt{Arrays.copyOf()} to copy arrays.
+\item Compare arrays by looping through entries — not by \texttt{==}.
+\end{itemize}
+
+
+\subsection*{ArrayList vs Array}
+\begin{itemize}[leftmargin=*]
+\item \texttt{ArrayList<String>} grows/shrinks automatically. Use \texttt{add()}, \texttt{get()}, \texttt{set()}, \texttt{remove()}.
+\item Internally backed by an array, resizes when capacity is exceeded.
+\item Default capacity is 10.
+\end{itemize}
+
+
+\subsection*{Comparing Arrays and ArrayLists}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Comparing Arrays (e.g., \texttt{int[] a}):}
+  \begin{itemize}
+    \item \texttt{a == b} compares memory references (not content) $\Rightarrow$ \textbf{false unless same object}.
+    \item \texttt{Arrays.equals(a, b)} compares contents element-by-element.
+    \item \texttt{Arrays.deepEquals(a, b)} is used for nested arrays.
+  \end{itemize}
+
+\item \textbf{Comparing \texttt{ArrayList<T>}:}
+  \begin{itemize}
+    \item \texttt{list1 == list2} compares references, not contents.
+    \item \texttt{list1.equals(list2)} compares:
+      \begin{itemize}
+        \item Same size
+        \item Same values
+        \item Same order
+      \end{itemize}
+    \item \texttt{Objects.equals(list1, list2)} avoids null pointer exceptions.
+  \end{itemize}
+
+\item \textbf{Summary Table:}
+\begin{center}
+\begin{tabular}{|l|l|c|}
+\hline
+\textbf{Expression} & \textbf{Compares} & \textbf{Checks Contents?} \\
+\hline
+\texttt{array1 == array2} & Reference (address) & No \\
+\texttt{Arrays.equals(a, b)} & Element values (1D) & Yes \\
+\texttt{list1 == list2} & Reference (object) & No \\
+\texttt{list1.equals(list2)} & Size, values, order & Yes \\
+\hline
+\end{tabular}
+\end{center}
+
+\item \textbf{Custom List Types (e.g., \texttt{AList<T>}):}
+  \begin{itemize}
+    \item Implement \texttt{equals()} by comparing number of entries and each item with \texttt{.equals()}.
+  \end{itemize}
+\end{itemize}
+
+\hrulefill
+
+\section*{Linked List Implementations}
+\begin{itemize}
+  \item Each node contains data and a reference to the next node.
+  \item Common in list and bag ADTs.
+  \item Operations:
+  \begin{itemize}
+    \item Add to front: constant time.
+    \item Traverse/search: linear time.
+  \end{itemize}
+  \item Removing or inserting nodes requires pointer adjustments.
+\end{itemize}
+
+\hrulefill
+
+\section*{Linked Nodes and Chains}
+\begin{itemize}[leftmargin=*]
+\item Each node stores data and a reference to the next node.
+\item Common for linked-based list and bag ADTs.
+\item Grows/shrinks easily, but random access is $O(n)$.
+\item Inner class \texttt{Node<T>} usually has \texttt{data}, 
+\texttt{next}, getters/setters.
+\item When you when you remove a node from a chain with only one node, the \texttt{firstNode} reference will become \texttt{null}.
+\item \textbf{Advance a node reference:} use \verb|currentNode = currentNode.getNextNode();|.
+\end{itemize}
+
+\hrulefill
+
+\section*{Best/Worst/Average Case}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Best Case:} ideal scenario (e.g., first item match)
+\item \textbf{Worst Case:} worst possible time
+\item \textbf{Average Case:} expected time for random input
+\item Worst-case is most useful when guaranteeing performance
+\end{itemize}
+
+
+\section*{Sample Exam Notes}
+\begin{itemize}[leftmargin=*]
+\item \texttt{getPosition()} – returns position (1-based) of matching item, or -1 if not found.
+\item \texttt{equals()} – true if same size \& all items equal in order.
+\item \texttt{add(1, val)} inserts at front. \texttt{add(val)} appends.
+\item ArrayBag: \texttt{add()} = $O(1)$, search = $O(n)$
+\item LinkedBag: \texttt{add()} = $O(1)$, search = $O(n)$
+\end{itemize}
+
+
+
+
+\newpage
+\section*{Stacks}
+
+A \textbf{stack} is a Last-In, First-Out (LIFO) data structure. It supports the following operations:
+
+\begin{itemize}
+  \item \texttt{push(newEntry)}: Adds a new entry to the top.
+  \item \texttt{pop()}: Removes and returns the top entry.
+  \item \texttt{peek()}: Returns (but does not remove) the top entry.
+  \item \texttt{isEmpty()}: Checks if the stack is empty.
+  \item \texttt{clear()}: Removes all entries.
+\end{itemize}
+
+Stacks are commonly implemented using a singly linked list or array. Exceptions are thrown for \texttt{pop()} and \texttt{peek()} when the stack is empty.
+
+\subsection*{Stack Use Case}
+\begin{verbatim}
+StackInterface<String> s = new OurStack<>();
+s.push("Jim");
+s.push("Jess");
+String top = s.pop(); // Returns "Jess"
+\end{verbatim}
+
+\subsection*{Stack Operations Example}
+
+\textbf{Question:}  
+What is the entry returned by the \texttt{peek()} method after the following stack operations?
+
+\begin{verbatim}
+push(A)
+push(R)
+pop()
+push(D)
+pop()
+push(L)
+pop()
+push(J)
+push(S)
+pop()
+pop()
+\end{verbatim}
+
+\textbf{Step-by-Step Stack Trace:}
+\begin{itemize}
+  \item push(A) → [A]
+  \item push(R) → [A, R]
+  \item pop()   → [A]
+  \item push(D) → [A, D]
+  \item pop()   → [A]
+  \item push(L) → [A, L]
+  \item pop()   → [A]
+  \item push(J) → [A, J]
+  \item push(S) → [A, J, S]
+  \item pop()   → [A, J]
+  \item pop()   → [A]
+\end{itemize}
+
+\textbf{Final Stack:} [A]  
+\textbf{Answer:} The \texttt{peek()} method would return \textbf{A}.
+
+\hrulefill
+
+\section*{Queues}
+
+A \textbf{queue} is a First-In, First-Out (FIFO) data structure. It supports the following operations:
+
+\begin{itemize}
+  \item \texttt{enqueue(newEntry)}: Adds a new entry to the back.
+  \item \texttt{dequeue()}: Removes and returns the front entry.
+  \item \texttt{getFront()}: Returns (without removing) the front entry.
+  \item \texttt{isEmpty()}: Checks if the queue is empty.
+  \item \texttt{clear()}: Removes all entries.
+\end{itemize}
+
+Common implementations include:
+\begin{itemize}
+  \item Linked list (\texttt{firstNode}, \texttt{lastNode})
+  \item Circular array
+  \item Two-part circular linked chain
+\end{itemize}
+
+Time complexity for \texttt{enqueue()} and \texttt{dequeue()} is typically $O(1)$.
+
+\subsection*{Linked Queue Example}
+
+Perform the following operations on an initially empty linked queue:
+
+\begin{verbatim}
+enqueue lion
+enqueue tiger
+enqueue cheetah
+dequeue
+enqueue jaguar
+\end{verbatim}
+
+\textbf{Resulting Queue (front to rear):}
+
+\begin{verbatim}
+tiger → cheetah → jaguar
+\end{verbatim}
+
+\subsection*{Deque (Double-Ended Queue)}
+\begin{itemize}
+  \item Supports insertion/removal from both front and rear.
+  \item Common operations:
+    \begin{itemize}
+      \item \texttt{addFront()}, \texttt{addBack()}
+      \item \texttt{removeFront()}, \texttt{removeBack()}
+      \item \texttt{getFront()}, \texttt{getBack()}
+    \end{itemize}
+  \item Can be implemented via doubly linked list or circular array.
+\end{itemize}
+
+
+
+\hrulefill
+
+\section*{Search}
+
+Two main strategies:
+
+\begin{itemize}
+  \item \textbf{Sequential Search} — for unsorted data
+    \begin{itemize}
+      \item Best: $O(1)$, Worst: $O(n)$, Avg: $O(n)$
+    \end{itemize}
+  \item \textbf{Binary Search} — for sorted arrays
+    \begin{itemize}
+      \item Best: $O(1)$, Worst: $O(\log n)$, Avg: $O(\log n)$
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Recursive Binary Search}
+\begin{verbatim}
+binarySearch(a, first, last, desiredItem)
+  if first > last
+    return false
+  mid = (first + last) / 2
+  if desiredItem == a[mid]
+    return true
+  else if desiredItem < a[mid]
+    return binarySearch(a, first, mid-1, desiredItem)
+  else
+    return binarySearch(a, mid+1, last, desiredItem)
+\end{verbatim}
+
+Note: Sequential search is preferred for linked chains due to lack of random access.
+
+\hrulefill
+
+\section*{Sort}
+
+\subsection*{Selection Sort}
+Finds the smallest item and swaps it with the front.
+
+\begin{itemize}
+  \item Time: $O(n^2)$ comparisons, $O(n)$ swaps
+\end{itemize}
+
+\subsubsection*{Selection Sort Example}
+\begin{itemize}
+    \item Target item: 11
+    \item List of items: 3 2 1 9 11 10 5 4
+\end{itemize}
+Question 1: What is the final result o fthe search? \emph{true} \\
+Question 2: How many comparison are being performed? \emph{5}
+
+\subsubsection*{Selection Sort Example (2 Iterations)}
+\textbf{Initial Array:}
+\[
+[8,\ 14,\ 2,\ 9,\ 5,\ 16,\ 1]
+\]
+
+\textbf{Iteration 1 (i = 0)}  
+Find smallest from index 0–6: \textbf{1}. Swap with 8:
+\[
+[1,\ 14,\ 2,\ 9,\ 5,\ 16,\ 8]
+\]
+
+\textbf{Iteration 2 (i = 1)}  
+Find smallest from index 1–6: \textbf{2}. Swap with 14:
+\[
+[1,\ 2,\ 14,\ 9,\ 5,\ 16,\ 8]
+\]
+
+\textbf{Result after 2 Iterations:}
+\[
+\boxed{[1,\ 2,\ 14,\ 9,\ 5,\ 16,\ 8]}
+\]
+
+\subsection*{Insertion Sort}
+Inserts each new item into its correct position within the sorted portion.
+
+\begin{itemize}
+  \item Best: $O(n)$, Worst: $O(n^2)$
+\end{itemize}
+
+\subsubsection*{Insertion Sort Example}
+\textbf{Initial Array:} \texttt{14 8 2 9 5 16 1}
+
+\textbf{Iteration 1}  
+Insert 8 before 14:  
+\texttt{8 14 2 9 5 16 1}
+
+\textbf{Iteration 2}  
+Insert 2 before 8:  
+\texttt{2 8 14 9 5 16 1}
+
+\textbf{Result after 2 Iterations:}  
+\texttt{2 8 14 9 5 16 1}
+
+\subsection*{Shell Sort}
+Optimized insertion sort using decreasing gap sizes to reduce swaps.
+
+\begin{itemize}
+  \item Best: $O(n \log n)$, Worst: $O(n^2)$ (with Shell's gap)
+\end{itemize}
+
+\subsubsection*{Shell Sort Example (Gaps: 5, 3, 1)}
+
+\textbf{Initial Array:} \verb|81 16 4 6 34 11 23 67 52|
+
+\textbf{Gap = 5}  
+Compare and sort: (81, 11), (16, 23), (4, 67), (6, 52)  
+Result: \verb|11 16 4 6 34 81 23 67 52|
+
+\textbf{Gap = 3}  
+Result: \verb|6 16 4 11 34 23 81 67 52|
+
+\textbf{Gap = 1}  
+Final insertion sort: \verb|4 6 11 16 23 34 52 67 81|
+
+\subsection*{Merge Sort}
+A recursive divide-and-conquer sorting algorithm.
+
+\begin{itemize}
+  \item Time: $O(n \log n)$ in all cases
+\end{itemize}
+
+\subsubsection*{Merge Sort Example}
+
+\textbf{Initial Array:} \verb|81 16 4 6 34 11 23 67|
+
+\textbf{Divide:}
+\begin{itemize}
+  \item Left: \verb|81 16 4 6| → \verb|81 16|, \verb|4 6|
+  \item Right: \verb|34 11 23 67| → \verb|34 11|, \verb|23 67|
+\end{itemize}
+
+\textbf{Conquer:}
+\begin{itemize}
+  \item \verb|81| + \verb|16| → \verb|16 81|
+  \item \verb|4| + \verb|6| → \verb|4 6|
+  \item \verb|34| + \verb|11| → \verb|11 34|
+  \item \verb|23| + \verb|67| → \verb|23 67|
+\end{itemize}
+
+\textbf{Merge Halves:}
+\begin{itemize}
+  \item \verb|16 81| + \verb|4 6| → \verb|4 6 16 81|
+  \item \verb|11 34| + \verb|23 67| → \verb|11 23 34 67|
+\end{itemize}
+
+\textbf{Final Merge:}
+\verb|4 6 11 16 23 34 67 81|
+
+\subsubsection*{Sorted Array:}
+\verb|4 6 11 16 23 34 67 81|
+
+\subsection*{Quick Sort}
+Partitions the array around a pivot.
+
+\begin{itemize}
+  \item Best/Avg: $O(n \log n)$, Worst: $O(n^2)$
+\end{itemize}
+
+\subsubsection*{Quick Sort Example (One Iteration)}
+\textbf{Initial Array:} \verb|81 16 4 6 34 11 23 67 52|  
+\textbf{Pivot:} 34 (middle element)
+
+\textbf{Partition:}
+\begin{itemize}
+  \item Less than pivot: \verb|16 4 6 11 23|
+  \item Pivot: \verb|34|
+  \item Greater than pivot: \verb|81 67 52|
+\end{itemize}
+
+\textbf{After One Iteration:}
+\verb|16 4 6 11 23 34 81 67 52|
+
+\textit{Note:} Subarrays are not yet recursively sorted.
+
+\subsection*{Radix Sort}
+\begin{itemize}
+  \item Non-comparison sort: uses digit positions.
+  \item Sort by least significant to most significant digit.
+  \item Bucketing by digit values (0–9).
+  \item Time complexity: $O(nk)$ for $n$ items of $k$ digits.
+\end{itemize}
+
+\subsubsection*{Radix Sort Example}
+
+\textbf{Initial Array:} \verb|81 546 677 9 97 12 53 22|
+
+\textbf{Step 1: Pad with Zeros}  
+\verb|081 546 677 009 097 012 053 022|
+
+\textbf{Step 2: Sort by Units Digit}  
+Result: \verb|081 012 022 053 546 677 097 009|
+
+\textbf{Step 3: Sort by Tens Digit}  
+Result: \verb|009 012 022 546 053 677 081 097|
+
+\textbf{Step 4: Sort by Hundreds Digit}  
+Result: \verb|009 012 022 053 081 097 546 677|
+
+\textbf{Step 5: Remove Zeros}  
+\textbf{Final Sorted Array:} \verb|9 12 22 53 81 97 546 677|
+
+\newpage
+\section*{Implementing Algorithms (ADTs Emphasis)}
+\begin{itemize}
+  \item Understand both the data structure interface (ADT) and its concrete implementation.
+    \begin{itemize}
+      \item Be prepared to trace or write method bodies for \texttt{Stack}, \texttt{Queue}, \texttt{Deque}, \texttt{List}, or \texttt{Bag}.
+      \item Know which operations are \textbf{constant time} ($O(1)$) vs. \textbf{linear time} ($O(n)$) based on implementation (array vs. linked list).
+    \end{itemize}
+  \item Start with pseudocode to clarify algorithm logic before translating into Java.
+  \item Focus on constructs typically required in ADT method implementation:
+    \begin{itemize}
+      \item Loops: for processing array indices or walking node chains.
+      \item Recursion: especially in search (binary, sequential) or divide-and-conquer sorts.
+      \item Conditionals: for error checks, bounds, or method branching.
+      \item List manipulation: adding/removing/shifting elements (ArrayList or linked nodes).
+    \end{itemize}
+  \item Pay special attention to common mistakes that lose points:
+    \begin{itemize}
+      \item Off-by-one indexing (especially in \texttt{add(pos, item)} or loop boundaries).
+      \item Mismanaging node links (null references, skipped nodes).
+      \item Forgetting base cases in recursive functions.
+      \item Violating preconditions (e.g., popping an empty stack).
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Sample Exam Algorithm Prompt 1: Remove Second-to-Last Node from a Singly Linked List}
+
+\textbf{Prompt:} Write a method that removes the second-to-last element from a singly linked list.
+
+\textbf{Assumptions:} The list is stored using \texttt{Node<T>} objects and begins at \texttt{firstNode}. Each node has a \texttt{data} field and a \texttt{next} pointer.
+
+\vspace{1em}
+\textbf{Pseudocode Answer:}
+\begin{verbatim}
+REMOVE-SECOND-TO-LAST(head)
+  IF head IS null OR head.next IS null
+    RETURN
+
+  IF head.next.next IS null
+    head ← head.next
+    RETURN
+
+  current ← head
+  WHILE current.next.next.next != null
+    current ← current.next
+
+  current.next ← current.next.next
+\end{verbatim}
+
+\vspace{1em}
+\textbf{Handwritten Java-Like Answer:}
+\begin{verbatim}
+void removeSecondToLast() {
+  if (firstNode == null || firstNode.next == null) return;
+
+  if (firstNode.next.next == null) {
+    firstNode = firstNode.next;
+    return;
+  }
+
+  Node<T> current = firstNode;
+  while (current.next.next.next != null) {
+    current = current.next;
+  }
+
+  current.next = current.next.next;
+}
+\end{verbatim}
+
+---
+
+\subsection*{Sample Exam Algorithm Prompt 2: Binary Search on a Sorted Array}
+
+\textbf{Prompt:} Implement a method for binary search on a sorted array of integers. Return true if the target exists.
+
+\vspace{1em}
+\textbf{Pseudocode Answer:}
+\begin{verbatim}
+BINARY-SEARCH(A, target)
+  left ← 0
+  right ← length(A) - 1
+
+  WHILE left ≤ right
+    mid ← (left + right) / 2
+
+    IF A[mid] = target
+      RETURN true
+    ELSE IF target < A[mid]
+      right ← mid - 1
+    ELSE
+      left ← mid + 1
+
+  RETURN false
+\end{verbatim}
+
+\vspace{1em}
+\textbf{Handwritten Java-Like Answer:}
+\begin{verbatim}
+boolean binarySearch(int[] array, int target) {
+  int left = 0;
+  int right = array.length - 1;
+
+  while (left <= right) {
+    int mid = (left + right) / 2;
+
+    if (array[mid] == target) return true;
+    else if (target < array[mid]) right = mid - 1;
+    else left = mid + 1;
+  }
+
+  return false;
+}
+\end{verbatim}
+
+
+\hrulefill
+
+\section*{Pseudocode (for ADTs and Sorting/Search)}
+
+Pseudocode expresses algorithm logic without requiring Java syntax. It is especially useful for explaining algorithms involving abstract data types.
+
+\subsection*{Purpose of Pseudocode}
+\begin{itemize}
+  \item Demonstrates clear algorithmic thinking before diving into code.
+  \item Used to describe how ADT methods (like \texttt{enqueue} or \texttt{binarySearch}) work.
+  \item Helpful for exam answers requiring explanation over implementation.
+\end{itemize}
+
+\subsection*{Common Conventions}
+\begin{itemize}
+  \item Capitalize keywords like \texttt{IF}, \texttt{ELSE}, \texttt{WHILE}, \texttt{RETURN}.
+  \item Indent for block structure.
+  \item Use descriptive variable names.
+  \item Avoid Java-specific syntax—focus on the logic.
+\end{itemize}
+
+\subsection*{Example 1: Stack Pop Operation}
+\begin{verbatim}
+POP()
+  IF stack is empty THEN
+    THROW EmptyStackException
+  ELSE
+    temp ← top.data
+    top ← top.next
+    RETURN temp
+\end{verbatim}
+
+\subsection*{Example 2: Binary Search on Sorted Array}
+\begin{verbatim}
+BINARY-SEARCH(A, key, first, last)
+  IF first > last THEN
+    RETURN false
+  mid ← (first + last) / 2
+  IF A[mid] = key THEN
+    RETURN true
+  ELSE IF key < A[mid] THEN
+    RETURN BINARY-SEARCH(A, key, first, mid - 1)
+  ELSE
+    RETURN BINARY-SEARCH(A, key, mid + 1, last)
+\end{verbatim}
+
+\subsection*{Tips for the Exam}
+\begin{itemize}
+  \item Trace recursive logic manually if needed.
+  \item Focus on what the algorithm is doing with the ADT—not just how it does it.
+  \item When modifying chains or lists, visualize links and track head/tail references.
+\end{itemize}
+
+\hrulefill
+
+\section*{Unified Modeling Language (UML) for ADTs}
+
+UML diagrams help visualize ADT specifications and class designs.
+
+\subsection*{Class Diagram Syntax}
+A UML class diagram has three compartments:
+\begin{itemize}
+  \item \textbf{Top:} Class name (e.g., \texttt{Stack<T>})
+  \item \textbf{Middle:} Attributes (e.g., \texttt{- topNode: Node<T>})
+  \item \textbf{Bottom:} Methods (e.g., \texttt{+ push(item: T): void})
+\end{itemize}
+
+\subsection*{Example: Stack UML Diagram}
+\begin{verbatim}
++--------------------------+
+|        Stack<T>         |
++--------------------------+
+| - topNode: Node<T>      |
++--------------------------+
+| + push(item: T): void   |
+| + pop(): T              |
+| + peek(): T             |
+| + isEmpty(): boolean    |
+| + clear(): void         |
++--------------------------+
+\end{verbatim}
+
+\subsection*{Common ADT Relationships}
+\begin{itemize}
+  \item \textbf{Composition:} ADTs often "own" their node structures. For example, a stack composes a chain of nodes.
+  \item \textbf{Generalization:} Interface definitions for ADTs (e.g., \texttt{StackInterface}) are generalized by implementation classes (e.g., \texttt{LinkedStack}).
+  \item \textbf{Association:} Classes may interact without ownership, e.g., passing a \texttt{Queue<T>} to a method.
+\end{itemize}
+
+\subsection*{Visibility Notation Recap}
+\begin{itemize}
+  \item \texttt{+} Public
+  \item \texttt{-} Private
+  \item \texttt{\#} Protected
+  \item \texttt{\~{}} Package (default)
+\end{itemize}
+
+
+\end{document}
